@@ -123,11 +123,14 @@ AtVector pLens_cam = AtVector(data->apertureSize * r * cos(phi), data->apertureS
 //else {
 //	phase = (period - t) / (period - angle);  // Falling edge (reflection)
 //}
-//double focalDistanceDiopters = 1 / data->focalDistance;
 //double eyePower = data->sph + data->cyl * phase;
-
-double eyePower = data->sph + data->cyl * pow(sin(phi + data->axis * AI_DTOR), 2);	
-double f = 1 / (1 / data->focalDistance + eyePower);
+float sph = data->sph;
+if (sph == 0) {
+	sph = 1e-6;
+}
+double eyePower = sph + data->cyl * pow(sin(phi + data->axis * AI_DTOR), 2);
+//double f = 1 / (1 / data->focalDistance + eyePower);
+double f = data->focalDistance + 1 / (eyePower);
 
 AtVector pFocus_cam = pSensor_cam * f;
 
